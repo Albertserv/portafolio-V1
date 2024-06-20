@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Portafolio</title>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
+</head>
+<body>
+  <header>
+    <h1>Mi Portafolio</h1>
+    <nav>
+      <ul>
+        <li><a href="#about">Sobre mí</a></li>
+        <li><a href="#tech-stack">Tecnologías</a></li>
+        <li><a href="#education">Educación</a></li>
+        <li><a href="#experience">Experiencia</a></li>
+        <li><a href="#projects">Proyectos</a></li>
+        <li><a href="#contact">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="introduction">
+      <img src="<%= asset_path('yo_img.jpg') %>" alt="Mi Imagen">
+      <h2>Hola, soy [Tu Nombre]</h2>
+      <p>Desarrollador full stack con experiencia en MERN Stack y NextJS. Apasionado por crear aplicaciones web dinámicas y centradas en el usuario.</p>
+    </section>
+
+    <section id="about">
+      <h2>Sobre mí</h2>
+      <p>Desarrollador full stack con experiencia en MERN Stack y NextJS. Apasionado por crear aplicaciones web dinámicas y centradas en el usuario.</p>
+    </section>
+
+    <section id="tech-stack">
+      <h2>Tecnologías</h2>
+      <ul>
+        <li>ReactJS</li>
+        <li>NodeJS</li>
+        <li>Express</li>
+        <li>MongoDB</li>
+      </ul>
+    </section>
+
+    <section id="education">
+      <h2>Educación</h2>
+      <ul>
+        <li>
+          <h3>Bachelor of Science</h3>
+          <p>GOVERNMENT COLLEGE, KOTA (2021 - 2022)</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="experience">
+      <h2>Experiencia</h2>
+      <ul>
+        <li>
+          <h3>MERN STACK INTERN</h3>
+          <p>Good Tech MIND (April 2023 - June 2023)</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="projects">
+      <h2>Proyectos</h2>
+      <div class="proyecto-lista">
+        <% @proyectos.each do |proyecto| %>
+          <div class="proyecto-item">
+            <img src="<%= asset_path('yo_img.jpg') %>" alt="<%= proyecto.titulo %>">
+            <h3><%= proyecto.titulo %></h3>
+            <p><%= proyecto.descripcion %></p>
+            <a href="<%= proyecto.url %>" target="_blank">Ver Proyecto</a>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contacto</h2>
+      <form action="/contact" method="post">
+        <label for="name">Nombre</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Mensaje</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Mi Nombre</p>
+  </footer>
+</body>
+</html>

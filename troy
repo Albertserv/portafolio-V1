@@ -1,0 +1,33 @@
+ => 
+[[32m#<Proyecto:0x00007fad996a7658[0m
+  id: [34m[1m1[0m,
+  titulo: [31m[1m"[0m[31mProyecto 1[0m[31m[1m"[0m,
+  descripcion: [31m[1m"[0m[31mDescripción del Proyecto 1[0m[31m[1m"[0m,
+  url: [31m[1m"[0m[31mhttp://ejemplo.com/proyecto1[0m[31m[1m"[0m,
+  created_at: Thu, 20 Jun 2024 20:18:59.001109000 UTC +00:00,
+  updated_at: Thu, 20 Jun 2024 20:18:59.001109000 UTC +00:00,
+  imagen: [36m[1mnil[0m[32m>[0m,
+ [32m#<Proyecto:0x00007fad996a7568[0m
+  id: [34m[1m2[0m,
+  titulo: [31m[1m"[0m[31mProyecto 2[0m[31m[1m"[0m,
+  descripcion: [31m[1m"[0m[31mDescripción del Proyecto 2[0m[31m[1m"[0m,
+  url: [31m[1m"[0m[31mhttp://ejemplo.com/proyecto2[0m[31m[1m"[0m,
+  created_at: Thu, 20 Jun 2024 20:18:59.005131000 UTC +00:00,
+  updated_at: Thu, 20 Jun 2024 20:18:59.005131000 UTC +00:00,
+  imagen: [36m[1mnil[0m[32m>[0m,
+ [32m#<Proyecto:0x00007fad996a73b0[0m
+  id: [34m[1m3[0m,
+  titulo: [31m[1m"[0m[31mProyecto 1[0m[31m[1m"[0m,
+  descripcion: [31m[1m"[0m[31mDescripción del Proyecto 1[0m[31m[1m"[0m,
+  url: [31m[1m"[0m[31mhttp://ejemplo.com/proyecto1[0m[31m[1m"[0m,
+  created_at: Thu, 20 Jun 2024 20:36:18.852924000 UTC +00:00,
+  updated_at: Thu, 20 Jun 2024 20:36:18.852924000 UTC +00:00,
+  imagen: [31m[1m"[0m[31mproyecto1.jpg[0m[31m[1m"[0m[32m>[0m,
+ [32m#<Proyecto:0x00007fad996a7270[0m
+  id: [34m[1m4[0m,
+  titulo: [31m[1m"[0m[31mProyecto 1[0m[31m[1m"[0m,
+  descripcion: [31m[1m"[0m[31mDescripción del Proyecto 1[0m[31m[1m"[0m,
+  url: [31m[1m"[0m[31mhttp://ejemplo.com/proyecto1[0m[31m[1m"[0m,
+  created_at: Thu, 20 Jun 2024 20:41:49.534972000 UTC +00:00,
+  updated_at: Thu, 20 Jun 2024 20:41:49.534972000 UTC +00:00,
+  imagen: [31m[1m"[0m[31myo_img.jpg[0m[31m[1m"[0m[32m>[0m] 

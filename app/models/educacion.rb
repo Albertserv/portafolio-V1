@@ -1,0 +1,2 @@
+class Educacion < ApplicationRecord
+end

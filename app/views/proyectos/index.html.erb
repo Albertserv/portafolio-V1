@@ -6,6 +6,7 @@
   <title>Mi Portafolio</title>
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
@@ -20,14 +21,17 @@
         <li><a href="#contact">Contacto</a></li>
       </ul>
     </nav>
+    <button id="dark-mode-toggle"><i class="fa-solid fa-power-off"></i></button>
   </header>
+  
 
   <main>
     <section id="introduction">
       <img src="<%= asset_path('yo_img.jpg') %>" alt="Mi Imagen">
-      <h2>Hola, soy [Tu Nombre]</h2>
+      <h2 class="saludo">Hola a todos, soy <span id="typed-name"></span></h2>
       <p>Desarrollador full stack con experiencia en MERN Stack y NextJS. Apasionado por crear aplicaciones web dinámicas y centradas en el usuario.</p>
     </section>
+    
 
     <section id="about">
       <h2>Sobre mí</h2>

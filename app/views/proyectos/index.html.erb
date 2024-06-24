@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Portafolio</title>
+  <title>Albertserv</title>
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
-    <h1>Mi Portafolio</h1>
+    <h1>Albertserv</h1>
     <nav>
       <ul>
         <li><a href="#about">Sobre mí</a></li>
@@ -23,28 +23,43 @@
     </nav>
     <button id="dark-mode-toggle"><i class="fa-solid fa-power-off"></i></button>
   </header>
-  
 
   <main>
     <section id="introduction">
       <img src="<%= asset_path('yo_img.jpg') %>" alt="Mi Imagen">
       <h2 class="saludo">Hola a todos, soy <span id="typed-name"></span></h2>
-      <p>Desarrollador full stack con experiencia en MERN Stack y NextJS. Apasionado por crear aplicaciones web dinámicas y centradas en el usuario.</p>
+      <p>Soy un programador apasionado por el desarrollo de software. Tengo experiencia en proyectos académicos y personales que han fortalecido mi capacidad para resolver problemas y crear soluciones innovadoras.</p>
     </section>
-    
 
     <section id="about">
       <h2>Sobre mí</h2>
-      <p>Desarrollador full stack con experiencia en MERN Stack y NextJS. Apasionado por crear aplicaciones web dinámicas y centradas en el usuario.</p>
+      <p>Me gradué en 2023 en Ingeniería en Informática en la Universidad Privada Del Este Sede C.D.E. donde adquirí una sólida base en lenguajes de programación y habilidades técnicas. Estoy motivado por la posibilidad de resolver problemas y crear soluciones innovadoras. Mi objetivo es seguir creciendo en el campo de la programación y contribuir a proyectos significativos. Me considero una persona curiosa y con ganas de aprender, siempre buscando mejorar mis conocimientos y habilidades.</p>
     </section>
 
     <section id="tech-stack">
       <h2>Tecnologías</h2>
-      <ul>
-        <li>ReactJS</li>
-        <li>NodeJS</li>
-        <li>Express</li>
-        <li>MongoDB</li>
+      <ul class="tech-list">
+        <% technologies = [
+          { name: 'Ruby on Rails', svg: 'rubyonrails.svg' },
+          { name: 'ReactJS', svg: 'reactjs.svg' },
+          { name: 'Ruby', svg: 'ruby.svg' },
+          { name: 'Python', svg: 'python.svg' },
+          { name: 'NodeJS', svg: 'nodejs.svg' },
+          { name: 'Express', svg: 'expressjs.png' },
+          { name: 'MongoDB', svg: 'mongodb.svg' },
+          { name: 'Postgresql', svg: 'pgsql.svg' },
+          { name: 'mariaDB', svg: 'mariadb.svg' },
+          { name: 'HTML', svg: 'html.svg'},
+          { name: "JavaScript", svg: 'js.svg'},
+          { name: 'tailwindCSS', svg: 'tailwind.svg' },
+        ] %>
+
+        <% technologies.each do |tech| %>
+          <li>
+            <%= image_tag(tech[:svg], alt: "#{tech[:name]} Logo") %>
+            <span><%= tech[:name] %></span>
+          </li>
+        <% end %>
       </ul>
     </section>
 
@@ -52,8 +67,33 @@
       <h2>Educación</h2>
       <ul>
         <li>
-          <h3>Bachelor of Science</h3>
-          <p>GOVERNMENT COLLEGE, KOTA (2021 - 2022)</p>
+          <h3>Ingeniería en Informática</h3>
+          <p> U.P.E. filial Ciudad Del Este  (2018 - 2023)</p>
+        </li>
+        <li>
+          <h3>Licenciatura en Análisis de Sistemas</h3>
+          <p> U.P.E. filial Ciudad Del Este  (2018 - 2022)</p>
+        </li>
+        <li>
+          <h3>Educación Media</h3>
+          <h4>Nivel Medio(Tercer curso, Segundo curso, Primer curso)</h4>
+          <p> Zenón Franco, Maria Roque Alonso (2017)</p>
+          <p> Colegio Nacional San Blas (2015-2016)</p>
+        </li>
+        <li>
+          <h3>Educación Básica</h3>
+          <h4>Tercer Ciclo(Noveno grado, Octavo grado, Septimo grado)</h4>
+          <p>Escuela y Colegio Nacional San Blas(2012 - 2014)</p>
+        </li>
+        <li>
+          <h3>Educación Básica </h3>
+          <h4>Segundo Ciclo(Quinto grado, Sexto grado)</h4>
+          <p>Escuela y Colegio Nacional Kuarahy Resê(2010 - 2011)</p>
+        </li>
+        <li>
+          <h3>Educación Básica </h3>
+          <h4> Primer y Segundo Ciclo(cuarto grado, tercer grado, segundo grado, primer grado)</h4>
+          <p>Escuela y Colegio Nacional Sagrada Familia(2006 - 2009)</p>
         </li>
       </ul>
     </section>
@@ -62,45 +102,53 @@
       <h2>Experiencia</h2>
       <ul>
         <li>
-          <h3>MERN STACK INTERN</h3>
-          <p>Good Tech MIND (April 2023 - June 2023)</p>
+          <h3>Neotelecom S.A.</h3>
+          <h4>Analista de Datos y Desarrollo backend (Junio 2023 - Actualmente)</h4>
+          <p>* Desarrollo de sistemas en Node.js y Express.js</p>
+          <p>* Desarrollo de apis Azure Function en Python y C#</p>
+          <p>* Desarrollo de aplicaciones de escritorio en python</p>
+          <p>* Desarrollo de backend en Python, Flask y Django </p>
+        </li>
+      </ul>
+
+      <ul>
+        <li>
+          <h3>Neotelecom S.A.</h4>
+          <h4>Asistente de R.M.A. (Febrero 2023 - Junio 2023)</h4>
+          <p>* Testeo y configuración de Routers</p>
+        </li>
+      </ul>
+
+      <ul>
+        <li>
+          <h3>Fusión Electromecánica</h4>
+          <h4>Desarrollo de sistema de Telemetría (Abril 2023 - Diciembre 2023)</h4>
+          <p>* Desarrollo de sistema en Node-Red.js, grafana, docker, influxDB</p>
+          <p>* Configuración de dispositivos Electrónicos con protocolo MQTT</p>
         </li>
       </ul>
     </section>
 
-    <section id="projects">
-      <h2>Proyectos</h2>
-      <div class="proyecto-lista">
-        <% @proyectos.each do |proyecto| %>
-          <div class="proyecto-item">
-            <img src="<%= asset_path('yo_img.jpg') %>" alt="<%= proyecto.titulo %>">
-            <h3><%= proyecto.titulo %></h3>
-            <p><%= proyecto.descripcion %></p>
-            <a href="<%= proyecto.url %>" target="_blank">Ver Proyecto</a>
-          </div>
-        <% end %>
-      </div>
-    </section>
-
     <section id="contact">
-      <h2>Contacto</h2>
-      <form action="/contact" method="post">
-        <label for="name">Nombre</label>
-        <input type="text" id="name" name="name" required>
+  <h2>Contacto</h2>
+  <%= form_with url: contact_path, method: :post, local: true do %>
+    <label for="name">Nombre</label>
+    <%= text_field_tag :name, nil, id: 'name', required: true %>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+    <label for="email">Email</label>
+    <%= email_field_tag :email, nil, id: 'email', required: true %>
 
-        <label for="message">Mensaje</label>
-        <textarea id="message" name="message" required></textarea>
+    <label for="message">Mensaje</label>
+    <%= text_area_tag :message, nil, id: 'message', required: true %>
 
-        <button type="submit">Enviar</button>
-      </form>
-    </section>
+    <%= submit_tag 'Enviar', class: 'submit-button' %>
+  <% end %>
+</section>
+
   </main>
 
   <footer>
-    <p>&copy; 2023 Mi Nombre</p>
+    <p>&copy; 2024 Albertserv</p>
   </footer>
 </body>
 </html>

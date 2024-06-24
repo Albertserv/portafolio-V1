@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :habilidades
   resources :experiencias
   resources :educaciones
-  post 'contact', to: 'contact#create'
+  post 'contact', to: 'contact#create'  # Corregido el nombre del controlador
   root 'proyectos#index'
 end
+

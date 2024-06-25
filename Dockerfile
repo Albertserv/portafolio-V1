@@ -2,7 +2,7 @@
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
 ARG RUBY_VERSION=3.1.4
-FROM ruby:$RUBY_VERSION-slim as base
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
 # Rails app lives here
 WORKDIR /rails
@@ -11,18 +11,20 @@ WORKDIR /rails
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_WITHOUT="development" \
+    SECRET_KEY_BASE="0oT5v+Hg9G5dgb7e7mTNQz4whkSVUzklctCg1Htap1iIfKQTXvkLOtP+wultmYV8BxTZ3rENRv7ed3RLdFM9+L+KTwNzejGY1zC5qqSjm7hOFKG3jmzDDdILDZRr0wIdkMsM8o+Fmkq66ct1elrz+9HmsOoOPXsqobHCkq3JL+hcRtkEdHepE9un8mnhV6uMt2kIPwTldIWQ7M5igrV4CoVHVV8bSkrl61lzaC+2+5UeWLTYVmZyJPOLQLcG/vMnySapBcI3p0rufspqtCVaFl3eDCbFByH96v96ys7x1/nVmfvlFEOcTh/uhpjz81rOsKJn8XJ5ngma1/kHOj8jdDbW++4ZZI15gkgelqJBX3oe6jRJGzm6ww4CQbe+P6Aqgb8e4oSfjqYr3nBwBUnEtD/9cVQa--RZgkhhaywJQV1MH7--hxvYMLwnqQkm+4YKjqQs3Q=="
 
-# Install dependencies needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
+# Install packages needed to build gems
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git libvips pkg-config
+
 # Install application gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --jobs=$(nproc) --retry=3 && \
+RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
@@ -32,14 +34,9 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Copy credentials to the Docker image
-COPY config/credentials.yml.enc config/master.key 
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-# Ensure the master.key is accessible and used by Rails
-ENV RAILS_MASTER_KEY="$(cat ./config/master.key)"
-
-# Precompiling assets for production using RAILS_MASTER_KEY
-RUN RAILS_MASTER_KEY=$RAILS_MASTER_KEY rails assets:precompile
 
 # Final stage for app image
 FROM base

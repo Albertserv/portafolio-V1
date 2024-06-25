@@ -105,6 +105,6 @@ Rails.application.configure do
     user_name: 'fluxoweb.py@gmail.com', # Nombre de usuario SMTP proporcionado por Brevo
     password: 'dWs9IV6LT8A7Znfb', # Contraseña SMTP proporcionada por Brevo
     authentication: :login, # Método de autenticación (puede variar según lo que soporte Brevo)
-    enable_starttls_auto: false # Habilita TLS si es requerido por el servidor SMTP
+    enable_starttls_auto: true # Habilita TLS si es requerido por el servidor SMTP
   }
 end

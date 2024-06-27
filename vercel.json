@@ -2,10 +2,10 @@
   "version": 2,
   "builds": [
     {
-      "src": "Dockerfile",
+      "src": "Gemfile",
       "use": "@vercel/static-build",
       "config": {
-        "buildCommand": "docker build -t myapp . && docker run myapp ./bin/rails assets:precompile",
+        "buildCommand": "bundle install && bundle exec rails assets:precompile",
         "distDir": "public"
       }
     }
@@ -13,7 +13,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "/index.html"
     }
   ]
 }

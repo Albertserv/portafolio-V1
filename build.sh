@@ -1,14 +1,17 @@
 #!/bin/bash
 
-# Instala Bundler
+# Configurar Bundler para usar un directorio local 'vendor/bundle'
+bundle config set --local path 'vendor/bundle'
+
+# Instalar Bundler usando la versión específica
 gem install bundler -v 2.3.26 --no-document
 
-# Instala las dependencias de Bundler
-bundle install --path vendor/bundle
+# Instalar las dependencias de Bundler
+bundle install
 
-# Precompila los activos de Rails
+# Asegurar que los activos estén precompilados
 bundle exec rails assets:precompile
 
-# Asegura que los activos estén en el directorio correcto para Vercel
+# Asegurar que los activos estén en el directorio correcto para Vercel
 mkdir -p public
 cp -R public/* public/

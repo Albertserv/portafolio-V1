@@ -3,7 +3,11 @@
   "builds": [
     {
       "src": "Dockerfile",
-      "use": "@vercel/docker"
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "docker build -t myapp . && docker run myapp ./bin/rails assets:precompile",
+        "distDir": "public"
+      }
     }
   ],
   "routes": [

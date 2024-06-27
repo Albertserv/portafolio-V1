@@ -6,13 +6,14 @@
       "use": "@vercel/static-build",
       "config": {
         "buildCommand": "./build.sh",
-        "distDir": "public"
+        "outputDirectory": "public"
       }
     }
   ],
   "routes": [
+    { "handle": "filesystem" },
     {
-      "src": "/(.*)",
+      "src": "/.*",
       "dest": "/index.html"
     }
   ]

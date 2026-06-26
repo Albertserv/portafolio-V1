@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" aria-label="MillonAI · App Icon">
+  <title>MillonAI · ícono de aplicación</title>
+  <rect x="0" y="0" width="280" height="280" rx="60" ry="60" fill="#0A0A0A"></rect>
+  <g transform="translate(140, 140) scale(0.78) translate(-140, -140)">
+    <rect x="50" y="60" width="22" height="160" fill="#FFFFFF"></rect>
+    <rect x="208" y="60" width="22" height="160" fill="#FFFFFF"></rect>
+    <rect x="38" y="54" width="46" height="6" fill="#FFFFFF"></rect>
+    <rect x="196" y="54" width="46" height="6" fill="#FFFFFF"></rect>
+    <rect x="36" y="220" width="50" height="6" fill="#FFFFFF"></rect>
+    <rect x="194" y="220" width="50" height="6" fill="#FFFFFF"></rect>
+    <path d="M 72 60 L 140 200 L 208 60" stroke="#FFFFFF" stroke-width="5" fill="none" stroke-linejoin="miter" stroke-miterlimit="3"></path>
+  </g>
+</svg>

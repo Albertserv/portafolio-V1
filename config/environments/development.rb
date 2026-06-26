@@ -78,11 +78,11 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'smtp-relay.brevo.com', # Dirección del servidor SMTP de Brevo
-    port: 587, # Puerto SMTP (puedes necesitar ajustarlo según la configuración de Brevo)
-    user_name: 'fluxoweb.py@gmail.com', # Nombre de usuario SMTP proporcionado por Brevo
-    password: 'dWs9IV6LT8A7Znfb', # Contraseña SMTP proporcionada por Brevo
-    authentication: :login, # Método de autenticación (puede variar según lo que soporte Brevo)
-    enable_starttls_auto: false # Habilita TLS si es requerido por el servidor SMTP
-    }
+    address:              'smtp-relay.brevo.com',
+    port:                 587,
+    user_name:            '77431e001@smtp-brevo.com',
+    password:             ENV.fetch('SMTP_PASSWORD', ''),
+    authentication:       :login,
+    enable_starttls_auto: true
+  }
 end

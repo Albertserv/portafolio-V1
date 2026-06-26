@@ -4,7 +4,11 @@ class ContactMailer < ApplicationMailer
       @email = email
       @message = message
   
-      mail(to: 'adservin50@gmail.com', subject: "Mensaje de #{name}", from: email)
+      mail(
+        to:       'adservin50@gmail.com',
+        reply_to: email,
+        subject:  "Portafolio — Mensaje de #{name}"
+      )
     end
   end
   

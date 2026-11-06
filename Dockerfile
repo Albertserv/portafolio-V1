@@ -1,8 +1,8 @@
 # syntax = docker/dockerfile:1
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
-ARG RUBY_VERSION=3.4.9
-FROM ruby:$RUBY_VERSION-slim as base
+ARG RUBY_VERSION=4.0.9
+FROM ruby:$RUBY_VERSION-slim AS base
 
 # Rails app lives here
 WORKDIR /rails
@@ -11,12 +11,13 @@ WORKDIR /rails
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development" \
-    SECRET_KEY_BASE="0oT5v+Hg9G5dgb7e7mTNQz4whkSVUzklctCg1Htap1iIfKQTXvkLOtP+wultmYV8BxTZ3rENRv7ed3RLdFM9+L+KTwNzejGY1zC5qqSjm7hOFKG3jmzDDdILDZRr0wIdkMsM8o+Fmkq66ct1elrz+9HmsOoOPXsqobHCkq3JL+hcRtkEdHepE9un8mnhV6uMt2kIPwTldIWQ7M5igrV4CoVHVV8bSkrl61lzaC+2+5UeWLTYVmZyJPOLQLcG/vMnySapBcI3p0rufspqtCVaFl3eDCbFByH96v96ys7x1/nVmfvlFEOcTh/uhpjz81rOsKJn8XJ5ngma1/kHOj8jdDbW++4ZZI15gkgelqJBX3oe6jRJGzm6ww4CQbe+P6Aqgb8e4oSfjqYr3nBwBUnEtD/9cVQa--RZgkhhaywJQV1MH7--hxvYMLwnqQkm+4YKjqQs3Q=="
+    BUNDLE_WITHOUT="development:test"
+
+# SECRET_KEY_BASE se configura como variable de entorno en el hosting, nunca en este archivo.
 
 
 # Throw-away build stage to reduce size of final image
-FROM base as build
+FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \

@@ -1,0 +1,26 @@
+<section id="sobre-mi" class="section about" data-section="about">
+  <div class="container about-grid">
+    <figure class="about-photo" data-reveal data-tilt>
+      <%= image_tag "albertserv.png", alt: "Ilustración de Alberto Servin saludando", loading: "lazy" %>
+    </figure>
+
+    <div class="about-copy">
+      <p class="eyebrow" data-reveal>Sobre mí</p>
+      <h2 class="section-title" data-split><%= split_words("Primero entiendo el problema. *Después* escribo código.") %></h2>
+      <p data-reveal>
+        Soy ingeniero en informática (UPE, 2023) y vivo en Ciudad del Este. Empecé configurando equipos de red,
+        pasé a sistemas de telemetría, APIs y procesamiento de datos, y hoy dirijo la parte técnica de
+        <strong>Fluxo Web</strong>, donde lanzamos productos propios con IA.
+      </p>
+      <p data-reveal>
+        Me gusta tanto el detalle de una interfaz como el diseño de una base de datos, y disfruto el proceso de hacerlo bien.
+      </p>
+
+      <dl class="stats">
+        <div data-reveal><dt><span data-count="4">4</span>+</dt><dd>años construyendo software</dd></div>
+        <div data-reveal><dt><span data-count="5">5</span></dt><dd>productos en producción</dd></div>
+        <div data-reveal><dt><span data-count="2">2</span></dt><dd>idiomas: español e inglés</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+<section id="contacto" class="section contact" data-section="contact">
+  <div class="container contact-grid">
+    <div class="contact-copy">
+      <p class="eyebrow" data-reveal>Contacto</p>
+      <h2 class="contact-title" data-split><%= split_words("¿Tenés un proyecto en mente? *Hablemos.*") %></h2>
+      <p class="contact-lead" data-reveal>
+        Contame qué querés construir. Te respondo rápido, y si no soy la persona indicada, te lo digo.
+      </p>
+
+      <div class="contact-wa" data-reveal>
+        <a href="https://wa.me/595975575157" target="_blank" rel="noopener" class="btn btn-primary" data-magnetic>
+          <%= icon(:whatsapp) %> WhatsApp personal
+        </a>
+        <a href="https://wa.me/595973772673" target="_blank" rel="noopener" class="btn btn-ghost" data-magnetic>
+          <%= icon(:whatsapp) %> WhatsApp de Fluxo
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap" data-reveal>
+      <% if notice %>
+        <p class="flash flash--ok" role="status"><%= icon(:check) %> <%= notice %></p>
+      <% end %>
+      <% if alert %>
+        <p class="flash flash--err" role="alert"><%= icon(:alert) %> <%= alert %></p>
+      <% end %>
+
+      <%= form_with url: contact_path, method: :post, local: true, class: "contact-form", data: { turbo: false } do %>
+        <p class="form-title">O dejame un mensaje</p>
+        <div class="field">
+          <%= text_field_tag :name, nil, id: "name", required: true, placeholder: " ", autocomplete: "name" %>
+          <label for="name">Tu nombre</label>
+        </div>
+        <div class="field">
+          <%= email_field_tag :email, nil, id: "email", required: true, placeholder: " ", autocomplete: "email" %>
+          <label for="email">Tu email</label>
+        </div>
+        <div class="field">
+          <%= text_area_tag :message, nil, id: "message", required: true, placeholder: " ", rows: 4 %>
+          <label for="message">¿En qué te puedo ayudar?</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Enviar mensaje <%= icon(:send) %></button>
+      <% end %>
+    </div>
+  </div>
+</section>

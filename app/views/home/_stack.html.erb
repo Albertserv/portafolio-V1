@@ -1,0 +1,42 @@
+<section id="stack" class="section stack" data-section="stack">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow" data-reveal>Stack</p>
+      <h2 class="section-title" data-split><%= split_words("Las dos mitades de *cada* proyecto.") %></h2>
+    </header>
+
+    <div class="stack-grid">
+      <div class="stack-card" data-spotlight data-reveal>
+        <p class="stack-kicker">Frontend</p>
+        <h3 class="stack-title">Lo que ves.</h3>
+        <p class="stack-text">
+          Interfaces rápidas, claras y animadas que funcionan en cualquier pantalla. Como esta página.
+        </p>
+        <ul class="logos">
+          <% stack[:front].each do |t| %>
+            <li data-logo>
+              <%= image_tag t[:logo], alt: "", class: ("invert" if t[:invertir]) %>
+              <span><%= t[:nombre] %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="stack-card stack-card--hidden" data-spotlight data-reveal data-unblur>
+        <p class="stack-kicker">Backend</p>
+        <h3 class="stack-title">Lo que <em>no</em> ves.</h3>
+        <p class="stack-text">
+          APIs, bases de datos, automatizaciones e integraciones con IA. Todo lo que hace que la parte linda funcione.
+        </p>
+        <ul class="logos">
+          <% stack[:back].each do |t| %>
+            <li data-logo>
+              <%= image_tag t[:logo], alt: "", class: ("invert" if t[:invertir]) %>
+              <span><%= t[:nombre] %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,275 @@
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import Lenis from "lenis"
+import { createNetwork } from "portfolio/network"
+
+const root = document.documentElement
+const reduced = root.classList.contains("reduced")
+const canHover = matchMedia("(hover: hover)").matches
+const lerp = (a, b, t) => a + (b - a) * t
+const $ = (sel, ctx = document) => ctx.querySelector(sel)
+const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel))
+
+gsap.registerPlugin(ScrollTrigger)
+
+/* ---------------- Scroll suave ---------------- */
+let lenis = null
+if (!reduced) {
+  lenis = new Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) })
+  lenis.on("scroll", ScrollTrigger.update)
+  gsap.ticker.add((time) => lenis.raf(time * 1000))
+  gsap.ticker.lagSmoothing(0)
+}
+
+function scrollToEl(el) {
+  if (!el) return
+  const top = el.id === "inicio" ? 0 : el
+  if (lenis) lenis.scrollTo(top, { offset: el.classList.contains("project") ? -90 : 0, duration: 1.4 })
+  else if (top === 0) scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" })
+  else el.scrollIntoView({ behavior: reduced ? "auto" : "smooth" })
+}
+
+/* ---------------- Menú mobile ---------------- */
+const nav = $("#nav")
+const menuBtn = $("#menu-btn")
+let menuOpen = false
+function setMenu(open) {
+  menuOpen = open
+  nav.classList.toggle("is-open", open)
+  menuBtn.setAttribute("aria-expanded", String(open))
+  menuBtn.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú")
+  if (lenis) open ? lenis.stop() : lenis.start()
+}
+menuBtn.addEventListener("click", () => setMenu(!menuOpen))
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menuOpen) setMenu(false) })
+
+document.addEventListener("click", (e) => {
+  const a = e.target.closest('a[href^="#"]')
+  if (!a) return
+  const el = document.getElementById(a.getAttribute("href").slice(1))
+  if (!el) return
+  e.preventDefault()
+  if (menuOpen) setMenu(false)
+  scrollToEl(el)
+})
+
+/* ---------------- Header ---------------- */
+const header = $("#site-header")
+ScrollTrigger.create({
+  start: 0,
+  end: "max",
+  onUpdate(self) {
+    const y = self.scroll()
+    header.classList.toggle("is-scrolled", y > 20)
+    header.classList.toggle("is-hidden", !menuOpen && self.direction === 1 && y > 500)
+  }
+})
+
+const navLinks = $$(".nav a")
+$$("main section[id]").forEach((sec) => {
+  ScrollTrigger.create({
+    trigger: sec,
+    start: "top 50%",
+    end: "bottom 50%",
+    onToggle(self) {
+      if (!self.isActive) return
+      navLinks.forEach((l) => l.classList.toggle("is-active", l.getAttribute("href") === `#${sec.id}`))
+    }
+  })
+})
+
+/* ---------------- Red 3D ---------------- */
+const hero = $("#inicio")
+const net = createNetwork({
+  canvas: $("#scene"),
+  labelsEl: $("#node-labels"),
+  projects: JSON.parse(hero.dataset.projects || "[]"),
+  onSelect: (slug) => scrollToEl(document.getElementById(slug))
+})
+
+if (net) {
+  // En celular la red va arriba y sin etiquetas, para no tapar el título
+  const base = net.mobile ? { x: 0, y: 1.9, scale: 0.6 } : { x: 2.9, y: 0.1, scale: 0.86 }
+  const baseLabels = net.mobile ? 0 : 1
+  net.set({ ...base, opacity: 1, labels: baseLabels })
+
+  // Al bajar del hero, la red se centra, crece y se atenúa para no competir con el texto
+  ScrollTrigger.create({
+    trigger: hero,
+    start: "top top",
+    end: "bottom top",
+    onUpdate(self) {
+      const p = self.progress
+      net.set({
+        x: lerp(base.x, 0, p),
+        y: lerp(base.y, 0, p),
+        scale: lerp(base.scale, net.mobile ? 0.95 : 1.3, p),
+        opacity: lerp(1, 0.32, p),
+        labels: Math.max(0, baseLabels - p * 3)
+      })
+    }
+  })
+
+  // Cada proyecto gira la red hasta su nodo
+  $$("[data-project]").forEach((el) => {
+    const i = Number(el.dataset.project)
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top 60%",
+      end: "bottom 40%",
+      onToggle: (self) => self.isActive && net.set({ focus: i })
+    })
+  })
+  ScrollTrigger.create({
+    trigger: ".project-list",
+    start: "top 60%",
+    end: "bottom 40%",
+    onLeave: () => net.set({ focus: -1 }),
+    onLeaveBack: () => net.set({ focus: -1 })
+  })
+
+  // En contacto la red vuelve a brillar
+  ScrollTrigger.create({
+    trigger: "#contacto",
+    start: "top 60%",
+    end: "bottom bottom",
+    onToggle: (self) => net.set({ opacity: self.isActive ? 0.6 : 0.32, scale: self.isActive ? 1.05 : (net.mobile ? 0.95 : 1.3) })
+  })
+}
+
+/* ---------------- Animaciones ---------------- */
+if (!reduced) {
+  // Entrada del hero
+  gsap.timeline({ defaults: { ease: "expo.out" } })
+    .to("[data-hero-title] .w", { y: 0, duration: 1.4, stagger: 0.06 }, 0.25)
+    .fromTo("[data-hero-fade]", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.2, stagger: 0.1 }, 0.6)
+
+  // Títulos palabra por palabra
+  $$("[data-split]").forEach((h) => {
+    gsap.to($$(".w", h), {
+      y: 0, duration: 1.2, ease: "expo.out", stagger: 0.05,
+      scrollTrigger: { trigger: h, start: "top 85%" }
+    })
+  })
+
+  // Aparición general
+  ScrollTrigger.batch("[data-reveal]", {
+    start: "top 88%",
+    once: true,
+    onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 36 }, { opacity: 1, y: 0, duration: 1.1, ease: "expo.out", stagger: 0.08, overwrite: true })
+  })
+
+  // Proyectos: la captura se abre y tiene parallax
+  $$(".project").forEach((p) => {
+    const browser = $(".browser", p)
+    const img = $("[data-parallax]", p)
+    gsap.fromTo(browser,
+      { clipPath: "inset(14% 10% 14% 10% round 14px)", scale: 0.9, opacity: 0 },
+      { clipPath: "inset(0% 0% 0% 0% round 14px)", scale: 1, opacity: 1, duration: 1.5, ease: "expo.out",
+        scrollTrigger: { trigger: p, start: "top 80%" } })
+    // La captura hace un zoom-out suave mientras pasa por la pantalla
+    gsap.fromTo(img, { scale: 1.12 }, {
+      scale: 1, ease: "none",
+      scrollTrigger: { trigger: p, start: "top bottom", end: "center 40%", scrub: true }
+    })
+  })
+
+  // Stack: "lo que no ves" empieza borroso y se vuelve visible
+  $$("[data-unblur]").forEach((card) => {
+    gsap.fromTo($$(".stack-text, .logos li", card),
+      { filter: "blur(10px)", opacity: 0.12 },
+      { filter: "blur(0px)", opacity: 1, stagger: 0.05, ease: "none",
+        scrollTrigger: { trigger: card, start: "top 85%", end: "center 55%", scrub: true } })
+  })
+  $$(".stack-card:not([data-unblur])").forEach((card) => {
+    gsap.from($$(".logos li", card), {
+      y: 24, opacity: 0, duration: 0.9, ease: "expo.out", stagger: 0.07,
+      scrollTrigger: { trigger: card, start: "top 75%" }
+    })
+  })
+
+  // Línea de tiempo que se dibuja con el scroll
+  const timeline = $("[data-timeline]")
+  if (timeline) {
+    gsap.to("[data-timeline-fill]", {
+      scaleY: 1, ease: "none",
+      scrollTrigger: { trigger: timeline, start: "top 65%", end: "bottom 65%", scrub: true }
+    })
+    $$("[data-tl-item]", timeline).forEach((item) => {
+      gsap.fromTo(item, { opacity: 0, x: -24 }, {
+        opacity: 1, x: 0, duration: 1, ease: "expo.out",
+        scrollTrigger: { trigger: item, start: "top 82%" }
+      })
+      ScrollTrigger.create({
+        trigger: item,
+        start: "top 65%",
+        onEnter: () => item.classList.add("is-active"),
+        onLeaveBack: () => item.classList.remove("is-active")
+      })
+    })
+  }
+
+  // Contadores
+  $$("[data-count]").forEach((el) => {
+    const o = { v: 0 }
+    el.textContent = "0"
+    gsap.to(o, {
+      v: Number(el.dataset.count), duration: 1.8, ease: "power2.out",
+      scrollTrigger: { trigger: el, start: "top 92%" },
+      onUpdate: () => { el.textContent = Math.round(o.v) }
+    })
+  })
+
+  // Marquee que acelera con la velocidad del scroll
+  const track = $("[data-marquee]")
+  if (track) {
+    const loop = gsap.to(track, { xPercent: -50, duration: 40, ease: "none", repeat: -1 })
+    ScrollTrigger.create({
+      start: 0,
+      end: "max",
+      onUpdate(self) {
+        const boost = Math.min(Math.abs(self.getVelocity()) / 300, 6)
+        gsap.to(loop, { timeScale: 1 + boost, duration: 0.2, overwrite: true })
+        gsap.to(loop, { timeScale: 1, duration: 1.4, delay: 0.25 })
+      }
+    })
+  }
+
+  if (canHover) {
+    // Inclinación 3D al pasar el mouse
+    $$("[data-tilt]").forEach((el) => {
+      const t = $(".browser", el) || el
+      const base = el.classList.contains("about-photo") ? -2 : 0
+      el.addEventListener("pointermove", (e) => {
+        const r = el.getBoundingClientRect()
+        const px = (e.clientX - r.left) / r.width - 0.5
+        const py = (e.clientY - r.top) / r.height - 0.5
+        gsap.to(t, { rotateY: px * 10, rotateX: -py * 8, rotateZ: base, transformPerspective: 1000, duration: 0.6, ease: "power3.out" })
+      })
+      el.addEventListener("pointerleave", () => {
+        gsap.to(t, { rotateY: 0, rotateX: 0, rotateZ: base, duration: 1.2, ease: "elastic.out(1, 0.5)" })
+      })
+    })
+
+    // Botones magnéticos
+    $$("[data-magnetic]").forEach((b) => {
+      b.addEventListener("pointermove", (e) => {
+        const r = b.getBoundingClientRect()
+        gsap.to(b, { x: (e.clientX - r.left - r.width / 2) * 0.25, y: (e.clientY - r.top - r.height / 2) * 0.35, duration: 0.4, ease: "power3.out" })
+      })
+      b.addEventListener("pointerleave", () => gsap.to(b, { x: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.4)" }))
+    })
+  }
+}
+
+// Luz que sigue al mouse en las tarjetas del stack
+$$("[data-spotlight]").forEach((card) => {
+  card.addEventListener("pointermove", (e) => {
+    const r = card.getBoundingClientRect()
+    card.style.setProperty("--mx", `${e.clientX - r.left}px`)
+    card.style.setProperty("--my", `${e.clientY - r.top}px`)
+  })
+})
+
+addEventListener("load", () => ScrollTrigger.refresh())
+window.__motionReady = true

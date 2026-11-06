@@ -1,1 +1,40 @@
-<%= yield %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#06070b">
+  <title>Alberto Servin — Full Stack Developer</title>
+  <meta name="description" content="Alberto Servin, Full Stack Developer y co-fundador de Fluxo Web. Productos con IA, APIs y apps web desde Ciudad del Este, Paraguay.">
+  <meta property="og:title" content="Alberto Servin — Full Stack Developer">
+  <meta property="og:description" content="Lo que ves y lo que no ves, lo construyo yo. Productos con IA, APIs y apps web desde Paraguay.">
+  <meta property="og:type" content="website">
+  <%= csrf_meta_tags %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <%= stylesheet_link_tag "application", media: "all" %>
+
+  <%# Oculta los elementos animables antes del primer pintado. Si el JS no carga en 4s, se muestran igual. %>
+  <script>
+    document.documentElement.classList.add("js");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("reduced");
+    setTimeout(function () { if (!window.__motionReady) document.documentElement.classList.remove("js"); }, 4000);
+  </script>
+  <%= javascript_importmap_tags %>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="scene-fade" aria-hidden="true"></div>
+  <div id="node-labels" aria-hidden="true"></div>
+
+  <%= render "shared/header" %>
+
+  <main>
+    <%= yield %>
+  </main>
+
+  <%= render "shared/footer" %>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<% servicios = ["Apps web", "Productos con IA", "APIs", "Automatizaciones", "Integraciones con WhatsApp", "Bases de datos", "Sistemas a medida"] %>
+<div class="marquee" aria-label="Servicios: <%= servicios.join(', ') %>">
+  <div class="marquee-track" data-marquee>
+    <% 2.times do %>
+      <div class="marquee-group" aria-hidden="true">
+        <% servicios.each do |s| %>
+          <span><%= s %></span><i>✦</i>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

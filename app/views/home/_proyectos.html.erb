@@ -1,0 +1,42 @@
+<section id="proyectos" class="section projects" data-section="projects">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow" data-reveal>Proyectos</p>
+      <h2 class="section-title" data-split><%= split_words("Cosas que construí y que *hoy* están funcionando.") %></h2>
+    </header>
+
+    <div class="project-list">
+      <% proyectos.each_with_index do |p, i| %>
+        <article id="<%= p[:slug] %>" class="project <%= 'project--flip' if i.odd? %>"
+                 data-project="<%= i %>" style="--p-color: <%= p[:color] %>">
+          <a class="project-media" href="<%= p[:url] %>" target="_blank" rel="noopener" data-tilt
+             aria-label="Visitar <%= p[:nombre] %>">
+            <div class="project-glow"></div>
+            <div class="browser">
+              <div class="browser-bar">
+                <span></span><span></span><span></span>
+                <em><%= URI(p[:url]).host.sub(/\Awww\./, "") %></em>
+              </div>
+              <div class="browser-screen" data-clip>
+                <%= image_tag p[:imagen], alt: "Captura de #{p[:nombre]}", loading: "lazy", data: { parallax: "" } %>
+              </div>
+            </div>
+          </a>
+
+          <div class="project-info">
+            <p class="project-index" data-reveal><%= format("%02d", i + 1) %> <span><%= p[:tipo] %></span></p>
+            <h3 class="project-name" data-reveal><%= p[:nombre] %></h3>
+            <p class="project-summary" data-reveal><%= p[:resumen] %></p>
+            <p class="project-desc" data-reveal><%= p[:descripcion] %></p>
+            <ul class="tags" data-reveal>
+              <% p[:tags].each do |t| %><li><%= t %></li><% end %>
+            </ul>
+            <a class="link-arrow" href="<%= p[:url] %>" target="_blank" rel="noopener" data-reveal>
+              Visitar <%= p[:nombre] %> <%= icon(:arrow) %>
+            </a>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,38 @@
+<section id="inicio" class="hero" data-section="hero"
+         data-projects="<%= proyectos.map { |p| { slug: p[:slug], nombre: p[:nombre] } }.to_json %>">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="status" data-hero-fade>
+        <span class="status-dot"></span> Disponible para proyectos
+      </p>
+
+      <h1 class="hero-title" data-hero-title>
+        <span class="line"><%= split_words("Lo que ves") %></span>
+        <span class="line"><%= split_words("y lo que *no ves,*") %></span>
+        <span class="line"><%= split_words("lo construyo yo.") %></span>
+      </h1>
+
+      <p class="hero-lead" data-hero-fade>
+        Soy <strong>Alberto Servin</strong>, Full Stack Developer y co-fundador de Fluxo Web.
+        Diseño interfaces y construyo las APIs, los datos y la IA que corren detrás de productos como
+        <a href="#millonai" data-scroll>MillonAI</a> y <a href="#reckado" data-scroll>Reckado</a>.
+      </p>
+
+      <div class="hero-actions" data-hero-fade>
+        <a href="#proyectos" class="btn btn-primary" data-scroll data-magnetic>
+          Ver proyectos <%= icon(:down) %>
+        </a>
+        <a href="#contacto" class="btn btn-ghost" data-scroll data-magnetic>Hablemos</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container hero-foot" data-hero-fade>
+    <span class="hero-loc"><%= icon(:pin) %> Ciudad del Este, Paraguay</span>
+    <span class="hero-hint">Cada punto verde es un proyecto. Pasá el mouse por la red.</span>
+    <span class="hero-social">
+      <a href="https://github.com/Albertserv" target="_blank" rel="noopener" aria-label="GitHub"><%= icon(:github) %></a>
+      <a href="https://linkedin.com/in/albertserv" target="_blank" rel="noopener" aria-label="LinkedIn"><%= icon(:linkedin) %></a>
+    </span>
+  </div>
+</section>

@@ -199,7 +199,7 @@ export function createNetwork({ canvas, labelsEl, projects = [], onSelect = () =
   document.addEventListener("pointerleave", () => { mouse.active = false; mouse.tx = mouse.ty = 0 })
 
   // ---- Estado que controla el scroll (ver main.js)
-  const target = { x: 0, y: 0, scale: 1, opacity: 1, labels: 1, focus: -1 }
+  const target = { x: 0, y: 0, scale: 1, opacity: 1, labels: 1, focus: -1, labelsMinX: 0 }
   const cur = { x: 0, y: 0, scale: 1, opacity: 1, labels: 0 }
   let rotY = -0.6, rotX = 0, lastOpacity = -1
 
@@ -355,10 +355,13 @@ export function createNetwork({ canvas, labelsEl, projects = [], onSelect = () =
       v.copy(pts[featured[k].i]).applyMatrix4(group.matrixWorld)
       const facing = Math.min(Math.max((v.z + 1.2) / 1.6, 0), 1)
       v.project(camera)
-      const a = cur.labels * k3 * (0.35 + 0.65 * facing)
       const el = labels[k]
       const w = el._w || (el._w = el.offsetWidth) || 120
       const x = Math.min(((v.x + 1) / 2) * W + 14, W - w - 12)
+      // Se desvanecen si se acercan al texto de la portada
+      const clear = Math.min(Math.max((x - target.labelsMinX) / 80, 0), 1)
+      const a = cur.labels * k3 * (0.35 + 0.65 * facing) * clear
+      el.style.visibility = a < 0.06 ? "hidden" : "visible"
       el.style.transform = `translate3d(${x.toFixed(1)}px, ${(((1 - v.y) / 2) * H - 15).toFixed(1)}px, 0)`
       el.style.opacity = a.toFixed(3)
       el.style.pointerEvents = a > 0.4 ? "auto" : "none"

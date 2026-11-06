@@ -94,6 +94,13 @@ if (net) {
   const baseLabels = net.mobile ? 0 : 1
   net.set({ ...base, opacity: 1, labels: baseLabels })
 
+  // Las etiquetas no pueden pisar el título de la portada
+  const title = $("[data-hero-title]")
+  const updateLabelsMinX = () => net.set({ labelsMinX: title ? title.getBoundingClientRect().right + 16 : 0 })
+  updateLabelsMinX()
+  addEventListener("resize", updateLabelsMinX)
+  document.fonts?.ready.then(updateLabelsMinX)
+
   // Al bajar del hero, la red se centra, crece y se atenúa para no competir con el texto
   ScrollTrigger.create({
     trigger: hero,
@@ -108,7 +115,9 @@ if (net) {
         opacity: lerp(1, 0.32, p),
         labels: Math.max(0, baseLabels - p * 3)
       })
-    }
+    },
+    // Fuera de la portada las etiquetas se apagan del todo
+    onLeave: () => net.set({ labels: 0 })
   })
 
   // Cada proyecto gira la red hasta su nodo

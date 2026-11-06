@@ -15,6 +15,42 @@ module Portafolio
       tags:        ["IA", "WhatsApp", "Finanzas"]
     },
     {
+      slug:        "redfin",
+      nombre:      "Redfin",
+      tipo:        "Fintech · Plataforma web",
+      url:         "https://redfin.com.py",
+      imagen:      "redfin-screen.jpg",
+      color:       "#f43f5e",
+      resumen:     "Financiamiento para empresas, 100% digital.",
+      descripcion: "Plataforma de financiamiento alternativo: descuento de facturas y créditos revolventes con solicitud online, " \
+                   "respuesta en 24 a 48 horas y un simulador que calcula al instante cuánto recibís por tus facturas.",
+      tags:        ["Fintech", "Factoring", "Simulador"]
+    },
+    {
+      slug:        "sparky",
+      nombre:      "Sparky",
+      tipo:        "SaaS · IA en WhatsApp",
+      url:         "https://sparky.fluxoweb.xyz",
+      imagen:      "sparky-screen.jpg",
+      color:       "#10b981",
+      resumen:     "Un asistente que atiende el WhatsApp de tu negocio.",
+      descripcion: "Responde consultas, da turnos, toma pedidos y pide la seña a cualquier hora. Entiende notas de voz, " \
+                   "confirma las citas y el dueño sigue todo desde una app en el celular.",
+      tags:        ["IA", "WhatsApp", "Turnos y pedidos"]
+    },
+    {
+      slug:        "zap-pulse",
+      nombre:      "Zap Pulse",
+      tipo:        "SaaS · Ventas por WhatsApp",
+      url:         "https://zap-pulse.fluxoweb.app",
+      imagen:      "zap-pulse-screen.jpg",
+      color:       "#6d8bff",
+      resumen:     "Tu tienda sigue vendiendo mientras dormís.",
+      descripcion: "Un asistente de ventas que contesta por WhatsApp en segundos, como lo haría el dueño: responde precios, " \
+                   "toma pedidos y agenda turnos. Se conecta escaneando un código, sin instalar nada.",
+      tags:        ["IA", "WhatsApp", "Ventas"]
+    },
+    {
       slug:        "quiro-ai",
       nombre:      "Quiro AI",
       tipo:        "Producto propio · IA generativa",
@@ -24,6 +60,18 @@ module Portafolio
       resumen:     "Bienestar personal asistido por IA.",
       descripcion: "Genera Qbooks personalizados basados en Ikigai e identidad, con QCoach como asistente de mentoría personal.",
       tags:        ["IA generativa", "Bienestar", "Coaching"]
+    },
+    {
+      slug:        "pro-aqua",
+      nombre:      "Pro Aqua",
+      tipo:        "E-commerce",
+      url:         "https://pro-aqua.com.py",
+      imagen:      "pro-aqua-screen.jpg",
+      color:       "#5eead4",
+      resumen:     "Tienda online de aspiradoras con filtro de agua.",
+      descripcion: "E-commerce en Paraguay para las aspiradoras alemanas Vivenso y Hyla: catálogo con precios en guaraníes, " \
+                   "carrito de compras, guías de uso y atención por WhatsApp.",
+      tags:        ["E-commerce", "Catálogo", "Carrito"]
     },
     {
       slug:        "reckado",
@@ -37,23 +85,12 @@ module Portafolio
       tags:        ["Web app", "Finanzas", "Mobile first"]
     },
     {
-      slug:        "glam-nails",
-      nombre:      "Glam Nails",
-      tipo:        "SaaS para clientes",
-      url:         "https://glamnails.fluxoweb.xyz",
-      imagen:      "glamnails-screen.png",
-      color:       "#d0457f",
-      resumen:     "Reservas online para un salón de belleza.",
-      descripcion: "Sistema de gestión y turnos para un salón de manicura: reservas 24/7, confirmación al instante y cero llamadas.",
-      tags:        ["SaaS", "Reservas", "Gestión"]
-    },
-    {
       slug:        "guarani-a-letras",
       nombre:      "guarani-a-letras",
       tipo:        "Librería open source · npm",
       url:         "https://www.npmjs.com/package/guarani-a-letras",
       imagen:      "guarani-screen.png",
-      color:       "#e5484d",
+      color:       "#c084fc",
       resumen:     "Números a letras, en guaraníes.",
       descripcion: "Convierte 12345 en \"DOCE MIL TRESCIENTOS CUARENTA Y CINCO GUARANÍES\". " \
                    "Lista para facturas, cheques y documentos legales en Paraguay.",

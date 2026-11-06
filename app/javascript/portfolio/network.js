@@ -140,6 +140,37 @@ export function createNetwork({ canvas, labelsEl, projects = [], onSelect = () =
 
   const heat = new Float32Array(n)
 
+  // ---- Líneas que conectan el cursor con los nodos más cercanos (el cursor es un nodo más)
+  const K = 4
+  const linkPos = new Float32Array(K * 6)
+  const linkCol = new Float32Array(K * 6)
+  const linkGeo = new THREE.BufferGeometry()
+  linkGeo.setAttribute("position", new THREE.BufferAttribute(linkPos, 3))
+  linkGeo.setAttribute("color", new THREE.BufferAttribute(linkCol, 3))
+  const links = new THREE.LineSegments(linkGeo, new THREE.LineBasicMaterial({
+    vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  }))
+  links.frustumCulled = false
+  scene.add(links)
+  const near = []
+
+  // ---- Onda que recorre la red nodo por nodo (al enviar el formulario)
+  let wave = null
+  function burst(start) {
+    if (start == null || start < 0 || start >= n) return
+    const dist = new Int16Array(n).fill(-1)
+    dist[start] = 0
+    const q = [start]
+    for (let h = 0; h < q.length; h++) {
+      const a = q[h]
+      for (const e of adj[a]) {
+        const b = e.a === a ? e.b : e.a
+        if (dist[b] < 0) { dist[b] = dist[a] + 1; q.push(b) }
+      }
+    }
+    wave = { t0: performance.now() / 1000, dist }
+  }
+
   // ---- Etiquetas HTML de los proyectos
   let hover = -1
   const labels = featured.map((f, k) => {
@@ -183,6 +214,8 @@ export function createNetwork({ canvas, labelsEl, projects = [], onSelect = () =
   addEventListener("resize", resize)
 
   const v = new THREE.Vector3()
+  const w = new THREE.Vector3()
+  const LINK_R = 190
   const start = performance.now()
   let last = start
   let initialized = false
@@ -243,15 +276,45 @@ export function createNetwork({ canvas, labelsEl, projects = [], onSelect = () =
     }
     packGeo.attributes.position.needsUpdate = true
 
-    // El cursor "enciende" los nodos cercanos
-    if (mouse.active && canHover && cur.opacity > 0.5) {
-      const R = 150, R2 = R * R
+    // El cursor "enciende" los nodos cercanos y se conecta a ellos
+    near.length = 0
+    if (mouse.active && canHover && cur.opacity > 0.2) {
+      const R = 150, R2 = R * R, LR2 = LINK_R * LINK_R
+      const lightUp = cur.opacity > 0.5
       for (let i = 0; i < n; i++) {
         v.copy(pts[i]).applyMatrix4(group.matrixWorld).project(camera)
         const dx = ((v.x + 1) / 2) * W - mouse.px, dy = ((1 - v.y) / 2) * H - mouse.py
         const d2 = dx * dx + dy * dy
-        if (d2 < R2) heat[i] = Math.max(heat[i], 1 - Math.sqrt(d2) / R)
+        if (lightUp && d2 < R2) heat[i] = Math.max(heat[i], 1 - Math.sqrt(d2) / R)
+        if (d2 < LR2) near.push({ i, d2, z: v.z })
       }
+      near.sort((a, b) => a.d2 - b.d2)
+    }
+    const mx = (mouse.px / W) * 2 - 1, my = 1 - (mouse.py / H) * 2
+    for (let k = 0; k < K; k++) {
+      const o = k * 6, nd = near[k]
+      if (!nd) { linkCol.fill(0, o, o + 6); continue }
+      w.copy(pts[nd.i]).applyMatrix4(group.matrixWorld).toArray(linkPos, o)
+      w.set(mx, my, nd.z).unproject(camera).toArray(linkPos, o + 3)
+      const s = (1 - Math.sqrt(nd.d2) / LINK_R) * Math.min(1, cur.opacity * 1.6)
+      tmp.copy(C_HOT).multiplyScalar(s * 0.5).toArray(linkCol, o)
+      tmp.copy(C_HOT).multiplyScalar(s).toArray(linkCol, o + 3)
+      heat[nd.i] = Math.max(heat[nd.i], s)
+    }
+    linkGeo.attributes.position.needsUpdate = true
+    linkGeo.attributes.color.needsUpdate = true
+
+    if (wave) {
+      const el = now / 1000 - wave.t0
+      let alive = false
+      for (let i = 0; i < n; i++) {
+        const d = wave.dist[i]
+        if (d < 0) continue
+        const ph = el - d * 0.07
+        if (ph >= 0 && ph < 0.15) heat[i] = 1
+        if (ph < 0.15) alive = true
+      }
+      if (!alive) wave = null
     }
     if (focusIdx >= 0 && featured[focusIdx]) {
       const fi = featured[focusIdx].i
@@ -308,6 +371,22 @@ export function createNetwork({ canvas, labelsEl, projects = [], onSelect = () =
 
   return {
     mobile,
-    set(partial) { Object.assign(target, partial) }
+    set(partial) { Object.assign(target, partial) },
+    burst,
+    // Inclinación desde el giroscopio del celular (-1 a 1 en cada eje)
+    tilt(x, y) { mouse.tx = x; mouse.ty = y },
+    // Nodo visible más cercano a un punto de la pantalla
+    nearest(x, y) {
+      let best = null
+      for (let i = 0; i < n; i++) {
+        w.copy(pts[i]).applyMatrix4(group.matrixWorld)
+        if (w.z < 0) continue
+        w.project(camera)
+        const sx = ((w.x + 1) / 2) * W, sy = ((1 - w.y) / 2) * H
+        const d = (sx - x) ** 2 + (sy - y) ** 2
+        if (!best || d < best.d) best = { i, x: sx, y: sy, d }
+      }
+      return best
+    }
   }
 }

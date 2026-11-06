@@ -2,6 +2,7 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Lenis from "lenis"
 import { createNetwork } from "portfolio/network"
+import { blueprint } from "portfolio/xray"
 
 const root = document.documentElement
 const reduced = root.classList.contains("reduced")
@@ -134,6 +135,138 @@ if (net) {
     start: "top 60%",
     end: "bottom bottom",
     onToggle: (self) => net.set({ opacity: self.isActive ? 0.6 : 0.32, scale: self.isActive ? 1.05 : (net.mobile ? 0.95 : 1.3) })
+  })
+
+  // Celular: la red gira según cómo se incline el teléfono
+  if (!canHover && !reduced && "DeviceOrientationEvent" in window) {
+    const clamp = (x) => Math.max(-1, Math.min(1, x))
+    const onOrient = (e) => {
+      if (e.gamma == null || e.beta == null) return
+      net.tilt(clamp(e.gamma / 25), clamp((e.beta - 50) / 25))
+    }
+    const enable = () => addEventListener("deviceorientation", onOrient, { passive: true })
+    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+      // iPhone pide permiso, y solo se puede pedir después de un toque
+      hero.addEventListener("touchend", () => {
+        DeviceOrientationEvent.requestPermission().then((s) => s === "granted" && enable()).catch(() => {})
+      }, { once: true })
+    } else {
+      enable()
+    }
+  }
+
+  // Si el mensaje se envió bien, la red lo celebra con una onda
+  if ($(".flash--ok")) {
+    setTimeout(() => {
+      net.set({ opacity: 0.9 })
+      const node = net.nearest(innerWidth / 2, innerHeight / 2)
+      if (node) net.burst(node.i)
+      setTimeout(() => net.set({ opacity: 0.6 }), 2500)
+    }, 1800)
+  }
+}
+
+/* ---------------- Formulario: el mensaje viaja por la red ---------------- */
+const form = $(".contact-form")
+if (form && net && !reduced) {
+  form.addEventListener("submit", (e) => {
+    if (form.dataset.sending) return
+    e.preventDefault()
+    if (!form.reportValidity()) return
+    form.dataset.sending = "1"
+
+    const btn = $("button[type=submit]", form)
+    btn.disabled = true
+    btn.textContent = "Enviando…"
+
+    const r = btn.getBoundingClientRect()
+    const target = net.nearest(innerWidth * 0.5, innerHeight * 0.4) || { i: -1, x: innerWidth / 2, y: innerHeight * 0.4 }
+    net.set({ opacity: 0.95 })
+
+    const packet = document.createElement("div")
+    packet.className = "packet"
+    document.body.appendChild(packet)
+    gsap.set(packet, { x: r.left + r.width / 2, y: r.top + r.height / 2 })
+
+    gsap.timeline({ onComplete: () => form.submit() })
+      .to(packet, { x: target.x, duration: 0.9, ease: "power2.inOut" }, 0)
+      .to(packet, { y: target.y, duration: 0.9, ease: "back.in(1.6)" }, 0)
+      .to(packet, { scale: 2.5, opacity: 0, duration: 0.25, ease: "power2.out" }, 0.85)
+      .add(() => net.burst(target.i), 0.85)
+      .to({}, { duration: 0.8 })
+  })
+}
+
+/* ---------------- Cursor: un nodo más de la red ---------------- */
+if (canHover && !reduced) {
+  const cursor = document.createElement("div")
+  cursor.className = "cursor is-off"
+  cursor.setAttribute("aria-hidden", "true")
+  document.body.appendChild(cursor)
+  root.classList.add("has-cursor")
+
+  let x = 0, y = 0, tx = 0, ty = 0, seen = false
+  addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return
+    tx = e.clientX; ty = e.clientY
+    if (!seen) { x = tx; y = ty; seen = true; cursor.classList.remove("is-off") }
+    const t = e.target
+    const hidden = !!t.closest("input, textarea, .project-media.is-xray")
+    cursor.classList.toggle("is-hidden", hidden)
+    cursor.classList.toggle("is-link", !hidden && !!t.closest("a, button, label, .node-label"))
+  }, { passive: true })
+  addEventListener("pointerdown", () => cursor.classList.add("is-down"))
+  addEventListener("pointerup", () => cursor.classList.remove("is-down"))
+  document.addEventListener("pointerleave", () => cursor.classList.add("is-off"))
+  document.addEventListener("pointerenter", () => seen && cursor.classList.remove("is-off"))
+
+  gsap.ticker.add(() => {
+    x += (tx - x) * 0.45
+    y += (ty - y) * 0.45
+    cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`
+  })
+}
+
+/* ---------------- Rayos X sobre las capturas ---------------- */
+if (canHover) {
+  $$("[data-xray]").forEach((media) => {
+    const area = $("[data-xray-area]", media)
+    const xray = $(".xray", media)
+    const lens = $(".lens", media)
+    const shot = $(".screen-img", media)
+    let ready = false, building = false
+
+    const build = () => {
+      if (building) return
+      building = true
+      blueprint(shot).then((url) => {
+        const img = new Image()
+        img.src = url
+        img.alt = ""
+        xray.appendChild(img)
+        ready = true
+      }).catch(() => {})
+    }
+    ScrollTrigger.create({
+      trigger: media,
+      start: "top 150%",
+      once: true,
+      onEnter: () => (window.requestIdleCallback || setTimeout)(build)
+    })
+
+    media.addEventListener("pointermove", (e) => {
+      const ar = area.getBoundingClientRect()
+      const inside = e.clientX > ar.left && e.clientX < ar.right && e.clientY > ar.top && e.clientY < ar.bottom
+      media.classList.toggle("is-xray", ready && inside)
+      const mr = media.getBoundingClientRect()
+      lens.style.transform = `translate3d(${e.clientX - mr.left}px, ${e.clientY - mr.top}px, 0)`
+      const xr = xray.getBoundingClientRect()
+      const s = xr.width / xray.offsetWidth || 1
+      xray.style.setProperty("--x", `${(e.clientX - xr.left) / s}px`)
+      xray.style.setProperty("--y", `${(e.clientY - xr.top) / s}px`)
+      xray.style.setProperty("--rt", `${120 / s}px`)
+    })
+    media.addEventListener("pointerleave", () => media.classList.remove("is-xray"))
   })
 }
 

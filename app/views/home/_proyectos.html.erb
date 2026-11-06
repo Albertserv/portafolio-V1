@@ -9,7 +9,7 @@
       <% proyectos.each_with_index do |p, i| %>
         <article id="<%= p[:slug] %>" class="project <%= 'project--flip' if i.odd? %>"
                  data-project="<%= i %>" style="--p-color: <%= p[:color] %>">
-          <a class="project-media" href="<%= p[:url] %>" target="_blank" rel="noopener" data-tilt
+          <a class="project-media" href="<%= p[:url] %>" target="_blank" rel="noopener" data-tilt data-xray
              aria-label="Visitar <%= p[:nombre] %>">
             <div class="project-glow"></div>
             <div class="browser">
@@ -17,9 +17,17 @@
                 <span></span><span></span><span></span>
                 <em><%= URI(p[:url]).host.sub(/\Awww\./, "") %></em>
               </div>
-              <div class="browser-screen" data-clip>
-                <%= image_tag p[:imagen], alt: "Captura de #{p[:nombre]}", loading: "lazy", data: { parallax: "" } %>
+              <div class="browser-screen" data-xray-area>
+                <div class="screen-inner" data-parallax>
+                  <%= image_tag p[:imagen], alt: "Captura de #{p[:nombre]}", loading: "lazy", class: "screen-img" %>
+                  <%# Vista "plano técnico" que revela la lupa; se genera en el navegador a partir de la captura %>
+                  <div class="xray" aria-hidden="true"></div>
+                </div>
               </div>
+            </div>
+            <div class="lens" aria-hidden="true">
+              <div class="lens-ring"></div>
+              <span class="lens-tag">lo que <em>no</em> ves</span>
             </div>
           </a>
 

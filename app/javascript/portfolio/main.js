@@ -2,7 +2,7 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Lenis from "lenis"
 import { createNetwork } from "portfolio/network"
-import { blueprint } from "portfolio/xray"
+import { highlightAll } from "portfolio/code"
 
 const root = document.documentElement
 const reduced = root.classList.contains("reduced")
@@ -236,44 +236,25 @@ if (canHover && !reduced) {
   })
 }
 
-/* ---------------- Rayos X sobre las capturas ---------------- */
+/* ---------------- Lupa: muestra el código detrás de cada captura ---------------- */
+highlightAll()
 if (canHover) {
   $$("[data-xray]").forEach((media) => {
     const area = $("[data-xray-area]", media)
     const xray = $(".xray", media)
     const lens = $(".lens", media)
-    const shot = $(".screen-img", media)
-    let ready = false, building = false
-
-    const build = () => {
-      if (building) return
-      building = true
-      blueprint(shot).then((url) => {
-        const img = new Image()
-        img.src = url
-        img.alt = ""
-        xray.appendChild(img)
-        ready = true
-      }).catch(() => {})
-    }
-    ScrollTrigger.create({
-      trigger: media,
-      start: "top 150%",
-      once: true,
-      onEnter: () => (window.requestIdleCallback || setTimeout)(build)
-    })
 
     media.addEventListener("pointermove", (e) => {
       const ar = area.getBoundingClientRect()
       const inside = e.clientX > ar.left && e.clientX < ar.right && e.clientY > ar.top && e.clientY < ar.bottom
-      media.classList.toggle("is-xray", ready && inside)
+      media.classList.toggle("is-xray", inside)
       const mr = media.getBoundingClientRect()
       lens.style.transform = `translate3d(${e.clientX - mr.left}px, ${e.clientY - mr.top}px, 0)`
       const xr = xray.getBoundingClientRect()
       const s = xr.width / xray.offsetWidth || 1
       xray.style.setProperty("--x", `${(e.clientX - xr.left) / s}px`)
       xray.style.setProperty("--y", `${(e.clientY - xr.top) / s}px`)
-      xray.style.setProperty("--rt", `${120 / s}px`)
+      xray.style.setProperty("--rt", `${150 / s}px`)
     })
     media.addEventListener("pointerleave", () => media.classList.remove("is-xray"))
   })

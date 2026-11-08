@@ -9,7 +9,7 @@
       <% proyectos.each_with_index do |p, i| %>
         <article id="<%= p[:slug] %>" class="project <%= 'project--flip' if i.odd? %>"
                  data-project="<%= i %>" style="--p-color: <%= p[:color] %>">
-          <a class="project-media" href="<%= p[:url] %>" target="_blank" rel="noopener" data-tilt data-xray
+          <a class="project-media" href="<%= p[:url] %>" target="_blank" rel="noopener" data-tilt <%= "data-xray" if PortafolioCodigo.para(p[:slug]) %>
              aria-label="Visitar <%= p[:nombre] %>">
             <div class="project-glow"></div>
             <div class="browser">
@@ -20,8 +20,13 @@
               <div class="browser-screen" data-xray-area>
                 <div class="screen-inner" data-parallax>
                   <%= image_tag p[:imagen], alt: "Captura de #{p[:nombre]}", loading: "lazy", class: "screen-img" %>
-                  <%# Vista "plano técnico" que revela la lupa; se genera en el navegador a partir de la captura %>
-                  <div class="xray" aria-hidden="true"></div>
+                  <%# Lo que revela la lupa: el código detrás del proyecto (app/models/portafolio_codigo.rb) %>
+                  <% if (codigo = PortafolioCodigo.para(p[:slug])) %>
+                    <div class="xray" aria-hidden="true">
+                      <div class="code-tab"><span></span><%= codigo[:archivo] %></div>
+                      <pre class="code"><code data-lang="<%= codigo[:lenguaje] %>"><%= codigo[:codigo] %></code></pre>
+                    </div>
+                  <% end %>
                 </div>
               </div>
             </div>

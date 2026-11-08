@@ -18,6 +18,7 @@
 
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --serif: "Instrument Serif", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
 
   --radius: 14px;
   --radius-lg: 24px;
@@ -403,17 +404,49 @@ main, .site-footer { position: relative; z-index: 1; }
   object-position: top center;
 }
 
-/* ---------- Rayos X: lupa que muestra el "plano técnico" de la captura ---------- */
+/* ---------- Lupa: revela el código detrás de la captura ---------- */
 @property --r { syntax: "<length>"; inherits: true; initial-value: 0px; }
 .xray {
   position: absolute;
   inset: 0;
-  background: #081c40;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(200, 241, 105, 0.07), transparent var(--r)),
+    #0a0c12;
   clip-path: circle(var(--r) at var(--x, 50%) var(--y, 50%));
   transition: --r 0.5s var(--ease);
   pointer-events: none;
 }
-.project-media.is-xray .xray { --r: var(--rt, 120px); }
+.project-media.is-xray .xray { --r: var(--rt, 150px); }
+
+.code-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 16px;
+  font: 500 11px var(--mono);
+  color: var(--muted);
+  background: #0e1119;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.code-tab span { width: 7px; height: 7px; border-radius: 50%; background: var(--p-color, var(--accent)); }
+.code {
+  margin: 0;
+  padding: 14px 18px;
+  font: 400 12px/1.7 var(--mono);
+  color: #cfd5e3;
+  white-space: pre;
+  tab-size: 2;
+  counter-reset: line;
+}
+.c-kw   { color: var(--accent); }
+.c-str  { color: #f5b971; }
+.c-num  { color: #8fb0ff; }
+.c-sym  { color: #f0a6ca; }
+.c-fn   { color: #7dd3fc; }
+.c-type { color: #93e5c6; }
+.c-com  { color: #5b6378; font-style: italic; }
 
 .lens {
   position: absolute;
@@ -424,25 +457,25 @@ main, .site-footer { position: relative; z-index: 1; }
 }
 .lens-ring {
   position: absolute;
-  left: -120px; top: -120px;
-  width: 240px; height: 240px;
+  left: -150px; top: -150px;
+  width: 300px; height: 300px;
   border-radius: 50%;
-  border: 1px solid rgba(150, 205, 255, 0.7);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), 0 0 50px rgba(70, 150, 255, 0.3), inset 0 0 40px rgba(70, 150, 255, 0.25);
+  border: 1px solid rgba(200, 241, 105, 0.6);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 0 50px rgba(200, 241, 105, 0.18), inset 0 0 40px rgba(200, 241, 105, 0.12);
   opacity: 0;
   transform: scale(0.4);
   transition: opacity 0.35s, transform 0.5s var(--ease);
 }
 .lens-tag {
   position: absolute;
-  left: 0; top: 132px;
+  left: 0; top: 162px;
   transform: translate(-50%, 6px);
   padding: 4px 12px;
   font-size: 13px;
   white-space: nowrap;
-  color: #d8ecff;
-  background: rgba(8, 28, 64, 0.85);
-  border: 1px solid rgba(150, 205, 255, 0.4);
+  color: var(--text);
+  background: rgba(10, 12, 18, 0.9);
+  border: 1px solid rgba(200, 241, 105, 0.35);
   border-radius: 999px;
   opacity: 0;
   transition: opacity 0.3s, transform 0.45s var(--ease);

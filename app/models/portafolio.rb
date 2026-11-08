@@ -98,16 +98,28 @@ module Portafolio
     }
   ].freeze
 
+  # En orden cronológico: la línea de tiempo se recorre de izquierda a derecha y termina hoy.
   EXPERIENCIA = [
     {
-      lugar:   "Fluxo Web E.A.S.",
-      rol:     "Co-fundador y desarrollador principal",
-      periodo: "2021 — Hoy",
-      nota:    "Full time desde 2026",
+      lugar:   "Universidad Privada del Este",
+      rol:     "Ingeniería en Informática · Lic. en Análisis de Sistemas",
+      periodo: "2018 — 2023",
+      educacion: true,
+      puntos:  ["Ingeniero en Informática, egresado en 2023"]
+    },
+    {
+      lugar:   "Neotelecom S.A.",
+      rol:     "Asistente de R.M.A.",
+      periodo: "2023",
+      puntos:  ["Testing y configuración de routers y equipos de red"]
+    },
+    {
+      lugar:   "Fusión Electromecánica",
+      rol:     "Desarrollador · sistema de telemetría",
+      periodo: "2023",
       puntos:  [
-        "Diseño, desarrollo y lanzamiento de productos web con IA",
-        "Arquitectura y stack técnico de cada producto",
-        "Dirección de producto y del equipo técnico"
+        "Monitoreo con Node-RED, Grafana, InfluxDB y Docker",
+        "Configuración de dispositivos IoT con MQTT"
       ]
     },
     {
@@ -121,47 +133,24 @@ module Portafolio
       ]
     },
     {
-      lugar:   "Fusión Electromecánica",
-      rol:     "Desarrollador · sistema de telemetría",
-      periodo: "2023",
+      lugar:   "Fluxo Web E.A.S.",
+      rol:     "Co-fundador y desarrollador principal",
+      periodo: "2021 — Hoy",
+      nota:    "Full time desde 2026",
       puntos:  [
-        "Monitoreo con Node-RED, Grafana, InfluxDB y Docker",
-        "Configuración de dispositivos IoT con MQTT"
+        "Diseño, desarrollo y lanzamiento de productos web con IA",
+        "Arquitectura y stack técnico de cada producto",
+        "Dirección de producto y del equipo técnico"
       ]
-    },
-    {
-      lugar:   "Neotelecom S.A.",
-      rol:     "Asistente de R.M.A.",
-      periodo: "2023",
-      puntos:  ["Testing y configuración de routers y equipos de red"]
-    },
-    {
-      lugar:   "Universidad Privada del Este",
-      rol:     "Ingeniería en Informática · Lic. en Análisis de Sistemas",
-      periodo: "2018 — 2023",
-      educacion: true,
-      puntos:  []
     }
   ].freeze
 
-  STACK = {
-    front: [
-      { nombre: "React",      logo: "reactjs.svg" },
-      { nombre: "JavaScript", logo: "js.svg" },
-      { nombre: "HTML / CSS", logo: "html.svg" },
-      { nombre: "Tailwind",   logo: "tailwind.svg" }
-    ],
-    back: [
-      { nombre: "Node.js",    logo: "nodejs.svg" },
-      { nombre: "Express",    logo: "expressjs.svg", invertir: true },
-      { nombre: "Python",     logo: "python.svg" },
-      { nombre: "Rails",      logo: "rubyonrails.svg" },
-      { nombre: "Ruby",       logo: "ruby.svg" },
-      { nombre: "C# / .NET",  logo: "dotnet.svg" },
-      { nombre: "PostgreSQL", logo: "pgsql.svg" },
-      { nombre: "MongoDB",    logo: "mongodb.svg" },
-      { nombre: "MariaDB",    logo: "mariadb.svg" },
-      { nombre: "Docker",     logo: "docker.svg" }
-    ]
-  }.freeze
+  # Las capas en las que se desarma la red, de arriba (lo que ves) hacia abajo (lo que no ves).
+  CAPAS = [
+    { nombre: "Interfaz",         visible: true, tecnologias: ["React", "JavaScript", "Tailwind", "HTML / CSS"] },
+    { nombre: "API y lógica",     tecnologias: ["Node.js", "Express", "Ruby on Rails", "Python", "C# / .NET"] },
+    { nombre: "IA y automatización", tecnologias: ["Modelos de IA", "WhatsApp", "Scripts en Python"] },
+    { nombre: "Datos",            tecnologias: ["PostgreSQL", "MongoDB", "MariaDB", "InfluxDB"] },
+    { nombre: "Infraestructura",  tecnologias: ["Docker", "Azure Functions", "Grafana", "MQTT / IoT"] }
+  ].freeze
 end

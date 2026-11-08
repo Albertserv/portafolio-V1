@@ -1,27 +1,31 @@
-<section id="experiencia" class="section experience" data-section="experience">
-  <div class="container">
-    <header class="section-head">
+<%# Capítulo 4: la red se estira en una ruta y las tarjetas avanzan de costado con el scroll. %>
+<section id="experiencia" class="chapter chapter--exp" aria-label="Experiencia">
+  <div class="chapter-sticky">
+    <div class="container exp-head">
       <p class="eyebrow" data-reveal>Experiencia</p>
       <h2 class="section-title" data-split><%= split_words("De configurar routers a *fundar* una empresa.") %></h2>
-    </header>
+    </div>
 
-    <ol class="timeline" data-timeline>
-      <li class="timeline-line" aria-hidden="true"><span data-timeline-fill></span></li>
+    <ol class="exp-track" data-exp-track>
       <% experiencia.each do |e| %>
-        <li class="tl-item <%= 'tl-item--edu' if e[:educacion] %>" data-tl-item>
-          <span class="tl-dot" aria-hidden="true"></span>
-          <p class="tl-period"><%= e[:periodo] %></p>
-          <div class="tl-body">
-            <h3><%= e[:lugar] %></h3>
-            <p class="tl-role"><%= e[:rol] %><% if e[:nota] %> <span class="tl-note"><%= e[:nota] %></span><% end %></p>
-            <% if e[:puntos].any? %>
-              <ul>
-                <% e[:puntos].each do |pt| %><li><%= pt %></li><% end %>
-              </ul>
-            <% end %>
-          </div>
+        <li class="exp-card <%= 'exp-card--edu' if e[:educacion] %>" data-exp-card>
+          <p class="exp-period"><span class="exp-dot"></span><%= e[:periodo] %></p>
+          <h3><%= e[:lugar] %></h3>
+          <p class="exp-role"><%= e[:rol] %></p>
+          <% if e[:nota] %><p class="exp-note"><%= e[:nota] %></p><% end %>
+          <% if e[:puntos].any? %>
+            <ul>
+              <% e[:puntos].each do |pt| %><li><%= pt %></li><% end %>
+            </ul>
+          <% end %>
         </li>
       <% end %>
     </ol>
+
+    <div class="container chapter-progress" aria-hidden="true">
+      <span class="chapter-progress-count">2018</span>
+      <span class="chapter-progress-bar"><i data-exp-bar></i></span>
+      <span class="chapter-progress-count">Hoy</span>
+    </div>
   </div>
 </section>

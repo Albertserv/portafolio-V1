@@ -1,7 +1,8 @@
+<%# La página es una sola historia: la red 3D del fondo se transforma en cada capítulo (ver portfolio/main.js) %>
 <%= render "home/hero", proyectos: @proyectos %>
 <%= render "home/marquee" %>
+<%= render "home/stack", capas: @capas %>
 <%= render "home/proyectos", proyectos: @proyectos %>
-<%= render "home/stack", stack: @stack %>
 <%= render "home/experiencia", experiencia: @experiencia %>
 <%= render "home/sobre_mi" %>
 <%= render "home/contacto" %>

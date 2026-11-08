@@ -1,16 +1,38 @@
-<section id="proyectos" class="section projects" data-section="projects">
-  <div class="container">
-    <header class="section-head">
-      <p class="eyebrow" data-reveal>Proyectos</p>
-      <h2 class="section-title" data-split><%= split_words("Cosas que construí y que *hoy* están funcionando.") %></h2>
-    </header>
+<%# Capítulo 3: escenario fijo. Al bajar cambia el proyecto activo y la red gira hasta su nodo. %>
+<section id="proyectos" class="chapter chapter--projects" style="--count: <%= proyectos.size %>" aria-label="Proyectos">
+  <div class="chapter-sticky">
+    <div class="container projects-stage">
+      <div class="projects-copy">
+        <p class="eyebrow">Proyectos</p>
+        <ol class="projects-nav">
+          <% proyectos.each_with_index do |p, i| %>
+            <li><a href="#<%= p[:slug] %>" data-goto-project="<%= i %>"><span><%= format("%02d", i + 1) %></span><%= p[:nombre] %></a></li>
+          <% end %>
+        </ol>
 
-    <div class="project-list">
-      <% proyectos.each_with_index do |p, i| %>
-        <article id="<%= p[:slug] %>" class="project <%= 'project--flip' if i.odd? %>"
-                 data-project="<%= i %>" style="--p-color: <%= p[:color] %>">
-          <a class="project-media" href="<%= p[:url] %>" target="_blank" rel="noopener" data-tilt <%= "data-xray" if PortafolioCodigo.para(p[:slug]) %>
-             aria-label="Visitar <%= p[:nombre] %>">
+        <div class="project-slides">
+          <% proyectos.each_with_index do |p, i| %>
+            <article id="<%= p[:slug] %>" class="project-slide" data-slide="<%= i %>" style="--p-color: <%= p[:color] %>">
+              <p class="project-index"><%= format("%02d", i + 1) %> <span><%= p[:tipo] %></span></p>
+              <h3 class="project-name"><%= p[:nombre] %></h3>
+              <p class="project-summary"><%= p[:resumen] %></p>
+              <p class="project-desc"><%= p[:descripcion] %></p>
+              <ul class="tags">
+                <% p[:tags].each do |t| %><li><%= t %></li><% end %>
+              </ul>
+              <a class="link-arrow" href="<%= p[:url] %>" target="_blank" rel="noopener">
+                Visitar <%= p[:nombre] %> <%= icon(:arrow) %>
+              </a>
+            </article>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="projects-media">
+        <% proyectos.each_with_index do |p, i| %>
+          <% codigo = PortafolioCodigo.para(p[:slug]) %>
+          <a class="project-media" href="<%= p[:url] %>" target="_blank" rel="noopener" data-media="<%= i %>"
+             data-tilt <%= "data-xray" if codigo %> style="--p-color: <%= p[:color] %>" aria-label="Visitar <%= p[:nombre] %>">
             <div class="project-glow"></div>
             <div class="browser">
               <div class="browser-bar">
@@ -18,10 +40,10 @@
                 <em><%= URI(p[:url]).host.sub(/\Awww\./, "") %></em>
               </div>
               <div class="browser-screen" data-xray-area>
-                <div class="screen-inner" data-parallax>
-                  <%= image_tag p[:imagen], alt: "Captura de #{p[:nombre]}", loading: "lazy", class: "screen-img" %>
+                <div class="screen-inner">
+                  <%= image_tag p[:imagen], alt: "Captura de #{p[:nombre]}", loading: (i < 2 ? "eager" : "lazy"), class: "screen-img" %>
                   <%# Lo que revela la lupa: el código detrás del proyecto (app/models/portafolio_codigo.rb) %>
-                  <% if (codigo = PortafolioCodigo.para(p[:slug])) %>
+                  <% if codigo %>
                     <div class="xray" aria-hidden="true">
                       <div class="code-tab"><span></span><%= codigo[:archivo] %></div>
                       <pre class="code"><code data-lang="<%= codigo[:lenguaje] %>"><%= codigo[:codigo] %></code></pre>
@@ -30,26 +52,20 @@
                 </div>
               </div>
             </div>
-            <div class="lens" aria-hidden="true">
-              <div class="lens-ring"></div>
-              <span class="lens-tag">lo que <em>no</em> ves</span>
-            </div>
+            <% if codigo %>
+              <div class="lens" aria-hidden="true">
+                <div class="lens-ring"></div>
+                <span class="lens-tag">lo que <em>no</em> ves</span>
+              </div>
+            <% end %>
           </a>
+        <% end %>
+      </div>
+    </div>
 
-          <div class="project-info">
-            <p class="project-index" data-reveal><%= format("%02d", i + 1) %> <span><%= p[:tipo] %></span></p>
-            <h3 class="project-name" data-reveal><%= p[:nombre] %></h3>
-            <p class="project-summary" data-reveal><%= p[:resumen] %></p>
-            <p class="project-desc" data-reveal><%= p[:descripcion] %></p>
-            <ul class="tags" data-reveal>
-              <% p[:tags].each do |t| %><li><%= t %></li><% end %>
-            </ul>
-            <a class="link-arrow" href="<%= p[:url] %>" target="_blank" rel="noopener" data-reveal>
-              Visitar <%= p[:nombre] %> <%= icon(:arrow) %>
-            </a>
-          </div>
-        </article>
-      <% end %>
+    <div class="container chapter-progress" aria-hidden="true">
+      <span class="chapter-progress-count"><b data-project-count>01</b> / <%= format("%02d", proyectos.size) %></span>
+      <span class="chapter-progress-bar"><i data-projects-bar></i></span>
     </div>
   </div>
 </section>

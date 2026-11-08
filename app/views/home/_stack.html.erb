@@ -1,42 +1,30 @@
-<section id="stack" class="section stack" data-section="stack">
-  <div class="container">
-    <header class="section-head">
-      <p class="eyebrow" data-reveal>Stack</p>
-      <h2 class="section-title" data-split><%= split_words("Las dos mitades de *cada* proyecto.") %></h2>
-    </header>
-
-    <div class="stack-grid">
-      <div class="stack-card" data-spotlight data-reveal>
-        <p class="stack-kicker">Frontend</p>
-        <h3 class="stack-title">Lo que ves.</h3>
-        <p class="stack-text">
-          Interfaces rápidas, claras y animadas que funcionan en cualquier pantalla. Como esta página.
+<%# Capítulo 2: la red se desarma en capas. Cada etiqueta (callout) señala una capa. %>
+<section id="stack" class="chapter chapter--stack" aria-label="Stack">
+  <div class="chapter-sticky">
+    <div class="container stack-stage">
+      <div class="stack-copy">
+        <p class="eyebrow" data-reveal>Stack</p>
+        <h2 class="section-title" data-split><%= split_words("Lo que *no ves,* capa por capa.") %></h2>
+        <p class="stack-lead" data-reveal>
+          Cada producto es una pila de capas. Trabajo en todas: desde la interfaz que tocás
+          hasta la infraestructura que nadie ve.
         </p>
-        <ul class="logos">
-          <% stack[:front].each do |t| %>
-            <li data-logo>
-              <%= image_tag t[:logo], alt: "", class: ("invert" if t[:invertir]) %>
-              <span><%= t[:nombre] %></span>
-            </li>
-          <% end %>
-        </ul>
       </div>
+    </div>
 
-      <div class="stack-card stack-card--hidden" data-spotlight data-reveal data-unblur>
-        <p class="stack-kicker">Backend</p>
-        <h3 class="stack-title">Lo que <em>no</em> ves.</h3>
-        <p class="stack-text">
-          APIs, bases de datos, automatizaciones e integraciones con IA. Todo lo que hace que la parte linda funcione.
-        </p>
-        <ul class="logos">
-          <% stack[:back].each do |t| %>
-            <li data-logo>
-              <%= image_tag t[:logo], alt: "", class: ("invert" if t[:invertir]) %>
-              <span><%= t[:nombre] %></span>
-            </li>
-          <% end %>
-        </ul>
-      </div>
+    <div class="callouts">
+      <svg class="callout-lines" aria-hidden="true"></svg>
+      <% capas.each_with_index do |c, l| %>
+        <div class="callout <%= 'callout--visible' if c[:visible] %>" data-callout="<%= l %>">
+          <p class="callout-name">
+            <span><%= format("%02d", l + 1) %></span><%= c[:nombre] %>
+            <em><%= c[:visible] ? "lo que ves" : "lo que no ves" %></em>
+          </p>
+          <ul class="callout-tech">
+            <% c[:tecnologias].each do |t| %><li><%= t %></li><% end %>
+          </ul>
+        </div>
+      <% end %>
     </div>
   </div>
 </section>

@@ -96,15 +96,16 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
 
+  # Mails del formulario de contacto: Resend por SMTP. La clave va en la variable RESEND_API_KEY.
   config.action_mailer.perform_caching = false
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              ENV.fetch('SMTP_ADDRESS', 'smtp-relay.brevo.com'),
+    address:              "smtp.resend.com",
     port:                 587,
-    user_name:            ENV.fetch('SMTP_USERNAME', '77431e001@smtp-brevo.com'),
-    password:             ENV['SMTP_PASSWORD'],
-    authentication:       :login,
+    user_name:            "resend",
+    password:             ENV["RESEND_API_KEY"],
+    authentication:       :plain,
     enable_starttls_auto: true
   }
 end

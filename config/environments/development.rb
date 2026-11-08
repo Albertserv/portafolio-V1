@@ -74,15 +74,16 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
+  # Mails del formulario: Resend por SMTP (RESEND_API_KEY en el archivo .env, que no se sube al repo)
   config.action_mailer.perform_caching = false
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp-relay.brevo.com',
+    address:              "smtp.resend.com",
     port:                 587,
-    user_name:            '77431e001@smtp-brevo.com',
-    password:             ENV.fetch('SMTP_PASSWORD', ''),
-    authentication:       :login,
+    user_name:            "resend",
+    password:             ENV["RESEND_API_KEY"],
+    authentication:       :plain,
     enable_starttls_auto: true
   }
 end

@@ -13,14 +13,17 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <%= stylesheet_link_tag "application", media: "all" %>
 
   <%# Oculta los elementos animables antes del primer pintado. Si el JS no carga en 4s, se muestran igual. %>
   <script>
-    document.documentElement.classList.add("js");
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("reduced");
-    setTimeout(function () { if (!window.__motionReady) document.documentElement.classList.remove("js"); }, 4000);
+    var html = document.documentElement;
+    html.classList.add("js");
+    // "story": la página como historia con escenarios fijos. Sin JS o con movimiento reducido, es una lista normal.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) html.classList.add("reduced");
+    else html.classList.add("story");
+    setTimeout(function () { if (!window.__motionReady) html.classList.remove("js", "story"); }, 4000);
   </script>
   <%= javascript_importmap_tags %>
 </head>
@@ -36,5 +39,11 @@
   </main>
 
   <%= render "shared/footer" %>
+
+  <%# Reglita de progreso del scroll (como en animejs.com) %>
+  <div class="ruler" id="ruler" aria-hidden="true">
+    <span class="ruler-label"><b data-ruler-num>01</b><span data-ruler-name>Inicio</span></span>
+    <span class="ruler-ticks"><% 32.times do %><i></i><% end %><span class="ruler-mark" data-ruler-mark></span></span>
+  </div>
 </body>
 </html>

@@ -350,7 +350,7 @@ main, .site-footer { position: relative; z-index: 1; }
 .story .chapter--projects { height: calc(var(--count) * 60vh + 100vh); }
 .story .chapter--exp { height: 280vh; }
 @media (max-width: 760px) {
-  .story .chapter--stack { height: 190vh; }
+  .story .chapter--stack { height: 230vh; }
   .story .chapter--projects { height: calc(var(--count) * 36vh + 100vh); }
   .section { padding: 72px 0; }
   .section-head { margin-bottom: 40px; }

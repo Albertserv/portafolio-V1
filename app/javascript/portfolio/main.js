@@ -279,6 +279,9 @@ function expStops() {
 function snapPoints() {
   const at = (c, p) => c.top + Math.max(0, c.height - innerHeight) * clamp01(p)
   const raw = [0]
+  // Celular: primero se frena en el título de "Capas" (el párrafo ocupa el lugar de las capas,
+  // así que necesita su propia parada para poder leerse antes de que se desarme la red)
+  if (C.stack && isMobile()) raw.push(C.stack.top)
   if (C.stack) raw.push(at(C.stack, 0.66))   // todas las capas a la vista
   if (C.proyectos) slides.forEach((_, i) => raw.push(at(C.proyectos, (i + 0.5) / projectCount)))
   if (C.experiencia) expStops().forEach((p) => raw.push(at(C.experiencia, p)))
@@ -304,11 +307,18 @@ if (story && lenis) {
     // Si apenas se movió desde una parada, vuelve a ella
     if (Math.abs(y - from) < 40 && pts.some((v) => Math.abs(v - from) < 3)) target = from
     if (target == null || Math.abs(target - y) < 2) return
-    const duration = Math.min(1.3, 0.6 + Math.abs(target - y) / 3000)
+    let duration = Math.min(1.3, 0.6 + Math.abs(target - y) / 3000)
+    let easing
+    // Celular: llegar a las capas abiertas va lento y parejo, así la red se desarma
+    // y las etiquetas aparecen de a una en vez de todas de golpe
+    if (C.stack && isMobile() && Math.abs(target - (C.stack.top + (C.stack.height - innerHeight) * 0.66)) < 3) {
+      duration = 2.2
+      easing = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2)
+    }
     snapping = true
     const done = () => { clearTimeout(safety); snapping = false; anchorY = scrollY }
     safety = setTimeout(done, duration * 1000 + 300)   // por si otro gesto interrumpe el snap
-    lenis.scrollTo(target, { duration, onComplete: done })
+    lenis.scrollTo(target, { duration, ...(easing && { easing }), onComplete: done })
   }
   const later = () => { clearTimeout(timer); timer = setTimeout(settle, 150) }
   addEventListener("scroll", later, { passive: true })

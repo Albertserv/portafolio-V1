@@ -630,7 +630,7 @@ html:not(.story) .projects-media { display: grid; gap: 40px; }
 .story .stack-stage { height: 100%; padding-top: 70px; }
 .stack-copy { position: relative; z-index: 2; max-width: 430px; }
 .stack-copy .section-title { max-width: 12ch; }
-.stack-lead { margin-top: 22px; color: var(--muted); font-size: 1.08rem; max-width: 38ch; }
+.stack-lead { margin-top: 22px; color: var(--muted); font-size: 1.08rem; max-width: 38ch; filter: opacity(var(--lead-fade, 1)); }
 
 .callouts { pointer-events: none; }
 .story .callouts { position: absolute; inset: 0; z-index: 2; }

@@ -262,9 +262,64 @@ document.fonts?.ready.then(() => { measure(); updateLabelsMinX(); update() })
 ScrollTrigger.addEventListener("refresh", () => { measure(); update() })
 addEventListener("load", () => ScrollTrigger.refresh())
 
+/* ---------- Snap: un gesto alcanza para pasar a la siguiente tarjeta o sección ----------
+   Desde la portada hasta "Sobre mí", cuando el scroll se detiene a mitad de camino termina
+   el paso en la dirección en que venía (o vuelve atrás si apenas se movió).
+   Paradas: portada → capas abiertas → cada proyecto → cada experiencia → sobre mí.
+   De "Sobre mí" en adelante, scroll libre. */
+const invSmooth = (v) => { let a = 0, b = 1; for (let k = 0; k < 20; k++) { const m = (a + b) / 2; smooth(m) < v ? (a = m) : (b = m) } return (a + b) / 2 }
+function expStops() {
+  if (!track) return []
+  const max = Math.max(1, track.scrollWidth - innerWidth)
+  return expCards.map((card) => {
+    const x = innerWidth / 2 - card.offsetLeft - card.offsetWidth / 2
+    return 0.04 + 0.9 * invSmooth(clamp01(-x / max))
+  })
+}
+function snapPoints() {
+  const at = (c, p) => c.top + Math.max(0, c.height - innerHeight) * clamp01(p)
+  const raw = [0]
+  if (C.stack) raw.push(at(C.stack, 0.66))   // todas las capas a la vista
+  if (C.proyectos) slides.forEach((_, i) => raw.push(at(C.proyectos, (i + 0.5) / projectCount)))
+  if (C.experiencia) expStops().forEach((p) => raw.push(at(C.experiencia, p)))
+  if (C["sobre-mi"]) raw.push(C["sobre-mi"].top)
+  const pts = []
+  raw.sort((a, b) => a - b).forEach((v) => { if (!pts.length || v - pts[pts.length - 1] > 20) pts.push(v) })
+  return pts
+}
+if (story && lenis) {
+  let anchorY = scrollY, snapping = false, touching = false, timer = 0, safety = 0
+  const settle = () => {
+    if (snapping || touching || menuOpen) return
+    if (lenis.isSmooth) return later()   // la rueda todavía se está deslizando
+    const y = scrollY, from = anchorY, dir = Math.sign(y - from)
+    anchorY = y
+    const pts = snapPoints()
+    if (!dir || y <= pts[0] + 2 || y >= pts[pts.length - 1] - 2) return
+    const seq = dir > 0 ? pts : [...pts].reverse()          // paradas en el sentido del gesto
+    const [next, second] = seq.filter((v) => dir * (v - from) > 2)
+    const ahead = seq.find((v) => dir * (v - y) >= -2)
+    // Un gesto = una parada. Solo un tirón largo (que pasa dos paradas) sigue de largo.
+    let target = second != null && dir * (y - second) >= -2 ? ahead : next ?? ahead
+    // Si apenas se movió desde una parada, vuelve a ella
+    if (Math.abs(y - from) < 40 && pts.some((v) => Math.abs(v - from) < 3)) target = from
+    if (target == null || Math.abs(target - y) < 2) return
+    const duration = Math.min(1.3, 0.6 + Math.abs(target - y) / 3000)
+    snapping = true
+    const done = () => { clearTimeout(safety); snapping = false; anchorY = scrollY }
+    safety = setTimeout(done, duration * 1000 + 300)   // por si otro gesto interrumpe el snap
+    lenis.scrollTo(target, { duration, onComplete: done })
+  }
+  const later = () => { clearTimeout(timer); timer = setTimeout(settle, 150) }
+  addEventListener("scroll", later, { passive: true })
+  addEventListener("touchstart", () => { touching = true; clearTimeout(timer) }, { passive: true })
+  addEventListener("touchend", () => { touching = false; later() }, { passive: true })
+}
+
 /* ---------- Capas: etiquetas con líneas que señalan cada capa ---------- */
 const callouts = $$("[data-callout]")
 const svg = $(".callout-lines")
+const stackCopy = $(".stack-copy")
 if (net && story && callouts.length && svg) {
   const NS = "http://www.w3.org/2000/svg"
   const parts = callouts.map(() => {
@@ -278,6 +333,9 @@ if (net && story && callouts.length && svg) {
     const active = region === "stack" && shape === "layers"
     const p = pinned(C.stack, scrollY)
     const m = isMobile()
+    // Celular: las capas ocupan el lugar del párrafo, así que el párrafo se apaga cuando aparecen
+    const lead = m && active ? smooth((p - 0.24) / 0.08) * smooth((t - 0.6) / 0.3) : 0
+    stackCopy?.style.setProperty("--lead-fade", (1 - lead).toFixed(3))
     callouts.forEach((el, l) => {
       const show = active ? smooth((p - (0.3 + l * 0.07)) / 0.06) * smooth((t - 0.6) / 0.3) : 0
       const { path, dot } = parts[l]
